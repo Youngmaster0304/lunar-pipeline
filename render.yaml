@@ -1,0 +1,99 @@
+# Render Blueprint — Infrastructure as Code
+# Deploy: render deploy  (or connect this repo in Render dashboard)
+#
+# Requires: Starter plan or above (Redis not on free tier)
+# For free-tier deployment, remove the `worker` service and `redis` block;
+#   runs will execute via daemon threads (no Celery).
+
+services:
+  # ── FastAPI web server ──
+  - type: web
+    name: lunar-pipeline-web
+    runtime: docker
+    repo: https://github.com/YOUR_USER/YOUR_REPO
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: UVICORN_WORKERS
+        value: 2
+      - key: LUNAR_DATABASE_URL
+        fromDatabase:
+          name: lunar-pipeline-db
+          property: connectionString
+      - key: LUNAR_REDIS_URL
+        fromService:
+          type: redis
+          name: lunar-pipeline-redis
+          property: connectionString
+      - key: LUNAR_CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: lunar-pipeline-redis
+          property: connectionString
+      - key: LUNAR_CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: lunar-pipeline-redis
+          property: connectionString
+      - key: LUNAR_CORS_ORIGINS
+        value: '["https://lunar-pipeline-web.onrender.com"]'
+      - key: LUNAR_LOG_JSON
+        value: "true"
+      - key: LUNAR_LOG_LEVEL
+        value: INFO
+    disk:
+      name: runs-data
+      mountPath: /app/web/runs
+      sizeGB: 1
+
+  # ── Celery worker ──
+  - type: worker
+    name: lunar-pipeline-worker
+    runtime: docker
+    repo: https://github.com/YOUR_USER/YOUR_REPO
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    command: bash scripts/start-worker.sh
+    envVars:
+      - key: CELERY_CONCURRENCY
+        value: 2
+      - key: LUNAR_DATABASE_URL
+        fromDatabase:
+          name: lunar-pipeline-db
+          property: connectionString
+      - key: LUNAR_REDIS_URL
+        fromService:
+          type: redis
+          name: lunar-pipeline-redis
+          property: connectionString
+      - key: LUNAR_CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: lunar-pipeline-redis
+          property: connectionString
+      - key: LUNAR_CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: lunar-pipeline-redis
+          property: connectionString
+      - key: LUNAR_LOG_JSON
+        value: "true"
+      - key: LUNAR_LOG_LEVEL
+        value: INFO
+    disk:
+      name: runs-data
+      mountPath: /app/web/runs
+      sizeGB: 1
+
+databases:
+  - name: lunar-pipeline-db
+    plan: starter  # free-tier: postgres
+
+redis:
+  - name: lunar-pipeline-redis
+    plan: starter  # not available on free tier

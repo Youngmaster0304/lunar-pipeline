@@ -1,0 +1,155 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          387.5,
+          -292.5
+        ]
+      },
+      "properties": {
+        "rank": 1,
+        "slope_deg": 6.16062593460083,
+        "exposure_score": 0.8490750789642334
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          452.5,
+          -367.5
+        ]
+      },
+      "properties": {
+        "rank": 2,
+        "slope_deg": 6.947000503540039,
+        "exposure_score": 0.8480259776115417
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          207.5,
+          -92.5
+        ]
+      },
+      "properties": {
+        "rank": 3,
+        "slope_deg": 3.3267621994018555,
+        "exposure_score": 0.8461146950721741
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          497.5,
+          -472.5
+        ]
+      },
+      "properties": {
+        "rank": 4,
+        "slope_deg": 7.919129848480225,
+        "exposure_score": 0.8460265398025513
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          377.5,
+          -132.5
+        ]
+      },
+      "properties": {
+        "rank": 5,
+        "slope_deg": 7.809244155883789,
+        "exposure_score": 0.8459757566452026
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          147.5,
+          -252.5
+        ]
+      },
+      "properties": {
+        "rank": 6,
+        "slope_deg": 6.310754299163818,
+        "exposure_score": 0.8451723456382751
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.5,
+          -297.5
+        ]
+      },
+      "properties": {
+        "rank": 7,
+        "slope_deg": 1.0830844640731812,
+        "exposure_score": 0.8446521162986755
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          352.5,
+          -242.5
+        ]
+      },
+      "properties": {
+        "rank": 8,
+        "slope_deg": 7.436487674713135,
+        "exposure_score": 0.8439964652061462
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          312.5,
+          -187.5
+        ]
+      },
+      "properties": {
+        "rank": 9,
+        "slope_deg": 6.540740966796875,
+        "exposure_score": 0.8428902626037598
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          412.5,
+          -142.5
+        ]
+      },
+      "properties": {
+        "rank": 10,
+        "slope_deg": 8.267407417297363,
+        "exposure_score": 0.8424336910247803
+      }
+    }
+  ]
+}

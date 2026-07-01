@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: lunar
+      POSTGRES_PASSWORD: lunar_pass
+      POSTGRES_DB: lunar
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lunar"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      LUNAR_CELERY_BROKER_URL: redis://redis:6379/0
+      LUNAR_CELERY_RESULT_BACKEND: redis://redis:6379/0
+      LUNAR_REDIS_URL: redis://redis:6379/0
+      LUNAR_DATABASE_URL: postgresql+psycopg2://lunar:lunar_pass@db:5432/lunar
+      LUNAR_LOG_JSON: "true"
+      LUNAR_CORS_ORIGINS: '["http://localhost:8000"]'
+    volumes:
+      - runs_data:/app/web/runs
+
+  worker:
+    build: .
+    command: celery -A web.celery_app worker --loglevel=info --concurrency=4
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      LUNAR_CELERY_BROKER_URL: redis://redis:6379/0
+      LUNAR_CELERY_RESULT_BACKEND: redis://redis:6379/0
+      LUNAR_REDIS_URL: redis://redis:6379/0
+      LUNAR_DATABASE_URL: postgresql+psycopg2://lunar:lunar_pass@db:5432/lunar
+      LUNAR_LOG_JSON: "true"
+    volumes:
+      - runs_data:/app/web/runs
+
+volumes:
+  pgdata:
+  runs_data:
