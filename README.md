@@ -1,3 +1,11 @@
+---
+title: Lunar Pipeline
+emoji: 🚀
+colorFrom: blue
+colorTo: red
+sdk: docker
+app_port: 7860
+---
 # Lunar South Pole Autonomous Exploration Pipeline
 
 **ISRO Space Tech Hackathon — Team Thunderbolts**
