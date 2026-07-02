@@ -1,6 +1,7 @@
 import type { PipelineRun, RunSummary, WsMessage } from './types'
+console.log("CACHE BREAKER: V3 Active");
 
-const API = import.meta.env.VITE_API_URL || 'https://lunar-pipeline-web-production.up.railway.app'
+const API = 'https://abhinavjha0304-lunar-pipeline.hf.space'
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, {
@@ -44,7 +45,7 @@ export function connectWs(
   onClose?: () => void,
 ): () => void {
   const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-  const wsBase = API ? API.replace(/^https?/, 'ws') : `${protocol}//${location.host}`
+  const wsBase = API ? API.replace(/^http/, 'ws') : `${protocol}//${location.host}`
   const ws = new WebSocket(`${wsBase}/ws/runs/${runId}`)
 
   ws.onmessage = (e) => {
