@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ZAxis } from 'recharts';
+import { createRun, listRuns, getRun, getHealth } from './api';
 import './index.css';
 
 // Mock Data Generators for Dashboard Visuals
@@ -32,48 +33,57 @@ function App() {
   const [runs, setRuns] = useState([]);
   const [activeRun, setActiveRun] = useState(null);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState('OFFLINE');
   const pollInterval = useRef(null);
 
   const fetchRuns = async () => {
     try {
-      const res = await fetch('http://localhost:8001/api/runs');
-      if (res.ok) {
-        const data = await res.json();
-        setRuns(data);
-      }
+      const data = await listRuns();
+      setRuns(data);
+      setError(null);
     } catch (err) {
       console.error(err);
+      setError(err.message);
+    }
+  };
+
+  const checkHealth = async () => {
+    try {
+      const h = await getHealth();
+      setStatus(h.status === 'ok' ? 'ONLINE' : 'ERROR');
+    } catch {
+      setStatus('OFFLINE');
     }
   };
 
   useEffect(() => {
     fetchRuns();
+    checkHealth();
     const interval = setInterval(fetchRuns, 5000);
-    return () => clearInterval(interval);
+    const hInterval = setInterval(checkHealth, 10000);
+    return () => {
+      clearInterval(interval);
+      clearInterval(hInterval);
+    };
   }, []);
 
   const runPipeline = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:8001/api/runs', { method: 'POST' });
-      if (!res.ok) throw new Error('Failed to dispatch pipeline');
-      const data = await res.json();
+      const data = await createRun();
       
       // Start polling for this specific run
       if (pollInterval.current) clearInterval(pollInterval.current);
       pollInterval.current = setInterval(async () => {
         try {
-          const pollRes = await fetch(`http://localhost:8001/api/runs/${data.id}`);
-          if (pollRes.ok) {
-            const runData = await pollRes.json();
-            setActiveRun(runData);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            if (runData.status !== 'running') {
-              clearInterval(pollInterval.current);
-              setLoading(false);
-              fetchRuns(); // update table
-            }
+          const runData = await getRun(data.id);
+          setActiveRun(runData);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (runData.status !== 'running') {
+            clearInterval(pollInterval.current);
+            setLoading(false);
+            fetchRuns(); // update table
           }
         } catch (e) {
           console.error('Polling error', e);
@@ -88,12 +98,9 @@ function App() {
 
   const viewRun = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8001/api/runs/${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setActiveRun(data);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      const data = await getRun(id);
+      setActiveRun(data);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       console.error(err);
     }
@@ -277,8 +284,8 @@ function App() {
 
       <footer className="mc-status-bar">
         <div className="mc-status-item">
-          <div className={`mc-status-indicator active`}></div>
-          SYSTEM STATUS: ONLINE
+          <div className={`mc-status-indicator ${status === 'ONLINE' ? 'active' : 'inactive'}`}></div>
+          SYSTEM STATUS: {status}
         </div>
         <div>
           LUNAR SOUTH POLE
