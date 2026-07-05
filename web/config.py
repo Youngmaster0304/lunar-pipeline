@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     database_echo: bool = False
 
     # CORS
-    cors_origins: List[str] = ["http://localhost:8000", "http://localhost:5173"]
+    cors_origins: List[str] = ["*"]
 
     # Pipeline
     figures_dir: str = str(Path(__file__).resolve().parent.parent / "figures")
