@@ -37,6 +37,8 @@ class PipelineRunOut(BaseModel):
     efpi_ice_pct: float
     error_message: Optional[str] = None
     duration_s: float
+    image_ice_mask: Optional[str] = None
+    image_slope_map: Optional[str] = None
     stages: List[StageResultOut] = []
     figures: List[FigureOut] = []
     gis_files: List[GisFileOut] = []

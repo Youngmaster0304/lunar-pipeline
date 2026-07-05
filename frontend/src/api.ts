@@ -2,7 +2,7 @@ import type { PipelineRun, RunSummary, WsMessage } from './types'
 console.log("CACHE BREAKER: V3 Active");
 
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-const API = isLocal 
+export const API = isLocal 
   ? (import.meta.env.VITE_API_URL || 'http://localhost:8000')
   : 'https://abhinavjha0304-lunar-pipeline.hf.space'
 

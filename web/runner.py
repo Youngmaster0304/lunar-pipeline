@@ -436,7 +436,14 @@ def _extract_metrics(run, config, capture: LogCapture, db) -> None:
             kv = line.strip().split("[METRIC] ")[-1]
             key, val = kv.split("=", 1)
             if hasattr(run, key):
-                setattr(run, key, float(val))
+                v_str = val.strip().lower()
+                if v_str == "true":
+                    v = True
+                elif v_str == "false":
+                    v = False
+                else:
+                    v = float(val)
+                setattr(run, key, v)
         except (IndexError, ValueError):
             pass
 

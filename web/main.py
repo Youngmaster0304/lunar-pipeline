@@ -66,29 +66,9 @@ def on_startup() -> None:
     )
 
 
-# ── Frontend ──
-
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request, db: Session = Depends(get_session)):
-    runs = (
-        db.query(PipelineRun)
-        .order_by(PipelineRun.created_at.desc())
-        .limit(50)
-        .all()
-    )
-    runs_data = [
-        {
-            "id": r.id,
-            "created_at": r.created_at.strftime("%Y-%m-%d %H:%M:%S") if r.created_at else "",
-            "status": r.status,
-            "dsc_name": r.dsc_name,
-            "ice_volume_m3": r.ice_volume_m3,
-            "dash_feasible": r.dash_feasible,
-            "duration_s": r.duration_s,
-        }
-        for r in runs
-    ]
-    return templates.TemplateResponse(request, "index.html", {"runs": runs_data})
+@app.get("/")
+def index():
+    return {"status": "LSP Exploration Pipeline API is running. Please use the Vite frontend on localhost:5175"}
 
 
 # ── API — Pipeline runs ──
@@ -264,6 +244,15 @@ def _run_to_out(run: PipelineRun, db: Session) -> PipelineRunOut:
             elif f.suffix == ".tif":
                 gis_files.append({"filename": f.name, "url": f"/runs/{run.id}/{f.name}", "format": "GeoTIFF"})
 
+    # Map old columns to figure URLs so front-end works
+    image_ice_mask = None
+    image_slope_map = None
+    for fig in figures:
+        if fig.filename == "stage1_dfsar.png":
+            image_ice_mask = f"/runs/{run.id}/{fig.filename}"
+        elif fig.filename == "stage2b_sites.png":
+            image_slope_map = f"/runs/{run.id}/{fig.filename}"
+
     return PipelineRunOut(
         id=run.id,
         created_at=run.created_at.strftime("%Y-%m-%d %H:%M:%S") if run.created_at else "",
@@ -277,6 +266,8 @@ def _run_to_out(run: PipelineRun, db: Session) -> PipelineRunOut:
         efpi_ice_pct=run.efpi_ice_pct,
         error_message=run.error_message,
         duration_s=run.duration_s,
+        image_ice_mask=image_ice_mask,
+        image_slope_map=image_slope_map,
         stages=[
             {
                 "stage_index": s.stage_index,

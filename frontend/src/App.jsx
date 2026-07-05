@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ZAxis } from 'recharts';
-import { createRun, listRuns, getRun, getHealth } from './api';
+import { createRun, listRuns, getRun, getHealth, API } from './api';
 import './index.css';
 
 // Mock Data Generators for Dashboard Visuals
@@ -146,7 +146,7 @@ function App() {
                 <div className="mc-data-row"><span className="mc-data-label">Ice Vol (Top 5m)</span><span className="mc-data-value amber">{activeRun.ice_volume_m3 ? activeRun.ice_volume_m3.toExponential(2) : 0} m³</span></div>
               </div>
               <div className="mc-viz-section">
-                {activeRun.image_ice_mask ? <img src={activeRun.image_ice_mask} className="mc-viz-image" alt="Ice Mask" /> : <div style={{padding:'2rem', color:'var(--mc-text-dim)'}}>NO IMAGE DATA</div>}
+                {activeRun.image_ice_mask ? <img src={activeRun.image_ice_mask.startsWith('data:') ? activeRun.image_ice_mask : `${API}${activeRun.image_ice_mask}`} className="mc-viz-image" alt="Ice Mask" /> : <div style={{padding:'2rem', color:'var(--mc-text-dim)'}}>NO IMAGE DATA</div>}
                 <div className="mc-viz-overlay"></div>
               </div>
             </div>
@@ -168,7 +168,7 @@ function App() {
                 <div className="mc-data-row"><span className="mc-data-label">Max Slope</span><span className="mc-data-value green">&lt; 10°</span></div>
               </div>
               <div className="mc-viz-section">
-                {activeRun.image_slope_map ? <img src={activeRun.image_slope_map} className="mc-viz-image" alt="Slope Map" /> : <div style={{padding:'2rem', color:'var(--mc-text-dim)'}}>NO IMAGE DATA</div>}
+                {activeRun.image_slope_map ? <img src={activeRun.image_slope_map.startsWith('data:') ? activeRun.image_slope_map : `${API}${activeRun.image_slope_map}`} className="mc-viz-image" alt="Slope Map" /> : <div style={{padding:'2rem', color:'var(--mc-text-dim)'}}>NO IMAGE DATA</div>}
                 <div className="mc-viz-overlay"></div>
               </div>
             </div>
