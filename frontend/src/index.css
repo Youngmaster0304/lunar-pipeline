@@ -271,6 +271,7 @@ body::after {
 /* Responsive visualization containers and images */
 /* Responsive visualization containers and images */
 .mc-viz-section {
+  height: 400px;
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -286,11 +287,15 @@ body::after {
 
 .mc-viz-image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
 .mc-viz-image.wide {
+  width: auto;
+  height: 100%;
   min-width: 1200px;
+  object-fit: contain;
 }
 
