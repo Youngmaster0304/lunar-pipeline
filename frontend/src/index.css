@@ -272,14 +272,15 @@ body::after {
 .mc-viz-section {
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid var(--mc-border);
   background: rgba(0, 0, 0, 0.2);
   margin-top: 1rem;
 }
 
 .mc-viz-image {
-  width: 100%;
+  min-width: 1200px;
   height: auto;
   display: block;
 }
