@@ -145,8 +145,8 @@ function App() {
                 <div className="mc-data-row"><span className="mc-data-label">Depolarization</span><span className="mc-data-value cyan">DOP &lt; 0.13</span></div>
                 <div className="mc-data-row"><span className="mc-data-label">Ice Vol (Top 5m)</span><span className="mc-data-value amber">{activeRun.ice_volume_m3 ? activeRun.ice_volume_m3.toExponential(2) : 0} m³</span></div>
               </div>
-              <div className="mc-viz-section">
-                {activeRun.image_ice_mask ? <img src={activeRun.image_ice_mask.startsWith('data:') ? activeRun.image_ice_mask : `${API}${activeRun.image_ice_mask}`} className="mc-viz-image" alt="Ice Mask" /> : <div style={{padding:'2rem', color:'var(--mc-text-dim)'}}>NO IMAGE DATA</div>}
+              <div className="mc-viz-section scrollable">
+                {activeRun.image_ice_mask ? <img src={activeRun.image_ice_mask.startsWith('data:') ? activeRun.image_ice_mask : `${API}${activeRun.image_ice_mask}`} className="mc-viz-image wide" alt="Ice Mask" /> : <div style={{padding:'2rem', color:'var(--mc-text-dim)'}}>NO IMAGE DATA</div>}
                 <div className="mc-viz-overlay"></div>
               </div>
             </div>
