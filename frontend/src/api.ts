@@ -1,7 +1,10 @@
 import type { PipelineRun, RunSummary, WsMessage } from './types'
 console.log("CACHE BREAKER: V3 Active");
 
-const API = 'https://abhinavjha0304-lunar-pipeline.hf.space'
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const API = isLocal 
+  ? (import.meta.env.VITE_API_URL || 'http://localhost:8000')
+  : 'https://abhinavjha0304-lunar-pipeline.hf.space'
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, {
