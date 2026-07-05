@@ -267,3 +267,20 @@ body::after {
   background: var(--mc-panel-bg);
 }
 @media print { .mc-header, .historical-runs-table, .mc-status-bar { display: none !important; } }
+
+/* Responsive visualization containers and images */
+.mc-viz-section {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--mc-border);
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: 1rem;
+}
+
+.mc-viz-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
