@@ -150,9 +150,13 @@ def run_pipeline_internal(db, run_id: int, event_bus: _EventBus | None = None) -
 
     # Clear shared figures directory so each run starts clean
     shared_fig_dir = _HERE / "figures"
-    if shared_fig_dir.exists():
-        shutil.rmtree(str(shared_fig_dir))
-    shared_fig_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        if shared_fig_dir.exists():
+            shutil.rmtree(str(shared_fig_dir), ignore_errors=True)
+        shared_fig_dir.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+
 
     stages_def = [
         (0, "DFSAR Radar Polarimetry (CPR/DOP)"),

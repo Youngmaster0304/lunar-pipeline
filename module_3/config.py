@@ -81,7 +81,7 @@ class Module3Config:
     alpha2: float = 1.5
     beta0: float = 2.0
     gamma: float = 0.5
-    max_slope_deg: float = 15.0
+    max_slope_deg: float = 25.0
     slope_clamp_eps: float = 0.5
     revisit_decay: float = 0.9
     battery_reserve_pct: float = 0.15
